@@ -2,7 +2,14 @@ import React from "react";
 
 class FormInput extends React.Component {
   render() {
-    return <div>Form Input</div>;
+    return (
+      <div>
+        Form Input
+        <div>
+          <p>Ini editan pertama</p>
+        </div>
+      </div>
+    );
   }
 }
 
