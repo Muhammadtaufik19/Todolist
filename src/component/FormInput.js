@@ -6,7 +6,7 @@ class FormInput extends React.Component {
       <div>
         Form Input
         <div>
-          <p>Ini editan pertama lagi</p>
+          <p>Ini editan pertama form input</p>
         </div>
       </div>
     );

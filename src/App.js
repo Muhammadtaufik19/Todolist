@@ -6,7 +6,7 @@ import TodoItem from "./component/TodoItem";
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <div className="logo">
         <img src={logo} alt="logo" />
         <h3>Task list</h3>
