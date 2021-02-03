@@ -19,11 +19,43 @@ class App extends React.Component {
       },
     ],
     isEdit: false,
+    editData: {
+      id: "",
+      title: "",
+    },
   };
 
-  openModal = () => {
+  update = () => {
+    const { id, title } = this.state.editData;
+    const newData = { id, title };
+    const newTodos = this.state.todos;
+    newTodos.splice(id - 1, 1, newData);
+    this.setState({
+      todos: newTodos,
+      isEdit: false,
+      editData: {
+        id: "",
+        title: "",
+      },
+    });
+  };
+
+  setTitle = (e) => {
+    this.setState({
+      editData: {
+        ...this.state.editData,
+        title: e.target.value,
+      },
+    });
+  };
+
+  openModal = (id, data) => {
     this.setState({
       isEdit: true,
+      editData: {
+        id,
+        title: data,
+      },
     });
   };
 
@@ -74,7 +106,13 @@ class App extends React.Component {
         <div className="input-form">
           <FormInput add={this.addTask} />
         </div>
-        <EditModal edit={this.state.isEdit} close={this.closeModal} />
+        <EditModal
+          edit={this.state.isEdit}
+          close={this.closeModal}
+          change={this.setTitle}
+          data={this.state.editData}
+          update={this.update}
+        />
       </div>
     );
   }

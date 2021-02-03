@@ -10,7 +10,11 @@ const TodoItem = ({ todo, del, open }) => {
     <div style={todoItem}>
       <p>{todo.title}</p>
       <div>
-        <Button text="edit" variant="success" action={open} />
+        <Button
+          text="edit"
+          variant="success"
+          action={() => open(todo.id, todo.title)}
+        />
         <Button
           text="delate"
           variant="warning"
