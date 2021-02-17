@@ -1,24 +1,22 @@
 import Reacr from "react";
 import Button from "./Button";
 
-const TodoItem = ({ todo, del, open }) => {
-  const delById = (id) => {
-    del(id);
-  };
-
+const TodoItem = ({ todo, del, open, isDelete, openDel }) => {
   return (
     <div style={todoItem}>
       <p>{todo.title}</p>
       <div>
         <Button
-          text="edit"
+          text="Edit"
           variant="success"
           action={() => open(todo.id, todo.title)}
         />
         <Button
-          text="delate"
+          text="Delete"
           variant="warning"
-          action={() => delById(todo.id)}
+          action={openDel}
+          del={del}
+          // action={() => del(todo.id)}
         />
       </div>
     </div>
