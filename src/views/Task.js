@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import logo from "../logo.svg";
 import "../App.css";
 import FormInput from "../component/FormInput";
@@ -7,31 +7,14 @@ import TodoItem from "../component/TodoItem";
 import EditModal from "../component/EditModal";
 import Delete from "../component/Delete";
 
-class Task extends React.Component {
-  state = {
-    todos: [
-      {
-        id: 1,
-        title: "Reading a book",
-      },
-      {
-        id: 2,
-        title: "Training",
-      },
-    ],
-    isEdit: false,
-    editData: {
-      id: "",
-      title: "",
-    },
-    isDelete: false,
-  };
-
-  openDel = () => {
-    this.setState({
-      isDelete: true,
-    });
-  };
+const Task = () => { 
+  const [todos, setTodos] = useState([])
+  const [isEdit, setIsedit] = useState(false);
+  const [editData, setEditdata] = useState( {
+    id: "",
+    title: ""
+  })
+  
 
   closeDel = () => {
     this.setState({

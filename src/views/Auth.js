@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../context/auth";
 import Button from "../component/Button";
 import Input from "../component/Input";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 const baseUrl = "https://my-udemy-api.herokuapp.com/api/v1";
 
 const Auth = () => {
-  const history = useHistory();
+  const { isAuthenticated, loginSuccess, loginFailed } = useContext(
+    AuthContext
+  );
   const [login, setLogin] = useState(true);
   const [isloading, setIsloading] = useState(false);
   const [error, setError] = useState("");
@@ -16,6 +19,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const isLogin = () => setLogin(!login);
 
+  // Login User
   const userLogin = async () => {
     setIsloading(true);
     const user = {
@@ -25,29 +29,61 @@ const Auth = () => {
     try {
       const res = await axios.post(`${baseUrl}/user/signin`, user);
       localStorage.setItem("token", res.data.token);
+      setEmail("");
+      setPassword("");
+      loginSuccess();
+      setIsloading(false);
+    } catch (err) {
+      setIserror(true);
+      setError(err.response.data.errors);
+      setIsloading(false);
+      setEmail("");
+      setPassword("");
+
+      setTimeout(() => {
+        setIserror(false);
+        loginFailed();
+        setError("");
+      }, 3000);
+    }
+  };
+
+  // Register User
+  const userRegister = async () => {
+    setIsloading(true);
+    const user = {
+      name,
+      email,
+      password,
+    };
+    try {
+      const res = await axios.post(`${baseUrl}/user/signup`, user);
+      localStorage.setItem("token", res.data.token);
       console.log(res);
       setName("");
       setEmail("");
       setPassword("");
+      loginSuccess();
       setIsloading(false);
-      history.push("/task");
     } catch (err) {
+      console.log(err.response.data.errors);
       setIserror(true);
       setError(err.response.data.errors);
       setIsloading(false);
       setName("");
       setEmail("");
       setPassword("");
-
       setTimeout(() => {
         setIserror(false);
+        loginFailed();
         setError("");
       }, 3000);
     }
   };
 
-  const userRegister = () => console.log("resgis");
-
+  if (isAuthenticated) {
+    return <Redirect to="/task" />;
+  }
   return (
     <div style={box}>
       <h3 style={head}>{login ? "Login" : "Register"}</h3>
@@ -55,17 +91,20 @@ const Auth = () => {
         {!login && (
           <Input
             placeholder="Name"
+            value={name}
             type="text"
             change={(e) => setName(e.target.value)}
           />
         )}
         <Input
           type="email"
+          value={email}
           placeholder="Email"
           change={(e) => setEmail(e.target.value)}
         />
         <Input
           type="password"
+          value={password}
           placeholder="Password"
           change={(e) => setPassword(e.target.value)}
         />
