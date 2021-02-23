@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import logo from "../logo.svg";
 import "../App.css";
 import FormInput from "../component/FormInput";
@@ -7,10 +7,12 @@ import TodoItem from "../component/TodoItem";
 import EditModal from "../component/EditModal";
 import Delete from "../component/Delete";
 import axios from "axios";
-
+import { AuthContext } from "../context/auth";
 const baseUrl = `https://my-udemy-api.herokuapp.com/api/v1`;
 
 const Task = () => {
+  const { logout } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const [todos, setTodos] = useState([]);
   const [isEdit, setIsedit] = useState(false);
   const [editData, setEditdata] = useState({
@@ -50,20 +52,22 @@ const Task = () => {
     setIsedit(false);
   };
 
-  const deleteTask = (id) => {
-    setTodos(todos.filter((item) => item.id !== id));
+  const deleteTask = async (id) => {
+    const token = localStorage.getItem("token");
+    await axios.get(`${baseUrl}/todo/${id}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    setTodos(todos.filter((item) => item._id !== id));
   };
 
   const addTask = (data) => {
-    const id = todos.length;
-    const newData = {
-      id: id + 1,
-      title: data,
-    };
-    setTodos([...todos, newData]);
+    setTodos([...todos, data]);
   };
 
   const getData = async () => {
+    setLoading(true);
     const token = localStorage.getItem("token");
     const res = await axios.get(`${baseUrl}/todo`, {
       headers: {
@@ -72,6 +76,7 @@ const Task = () => {
     });
     console.log(res);
     setTodos(res.data.todos);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -83,6 +88,7 @@ const Task = () => {
       <div className="logo">
         <img src={logo} alt="logo" />
         <h3>Task list</h3>
+        <Button text="Logout" variant="primary" action={logout} />
       </div>
       <div className="list">
         {todos.map((item) => (
@@ -91,6 +97,7 @@ const Task = () => {
             todo={item}
             del={deleteTask}
             open={openModal}
+            loading={loading}
             // openDel={openDel}
           />
         ))}

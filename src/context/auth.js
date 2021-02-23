@@ -3,7 +3,7 @@ import React, { useState, createContext } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = (props) => {
-  const [isAuthenticated, setAuth] = useState(true);
+  const [isAuthenticated, setAuth] = useState(false);
   const loginSuccess = () => setAuth(true);
 
   const loginFailed = () => {

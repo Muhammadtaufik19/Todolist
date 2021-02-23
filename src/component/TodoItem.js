@@ -1,25 +1,35 @@
 import Reacr from "react";
 import Button from "./Button";
+import SkeletonLoading from "./SkeletonLoading";
 
-const TodoItem = ({ todo, del, open, isDelete, openDel }) => {
+const TodoItem = ({ loading, todo, del, open, isDelete, openDel }) => {
+  const delById = (id) => {
+    del(id);
+  };
   return (
-    <div style={todoItem}>
-      <p>{todo.title}</p>
-      <div>
-        <Button
-          text="Edit"
-          variant="success"
-          action={() => open(todo.id, todo.title)}
-        />
-        <Button
-          text="Delete"
-          variant="warning"
-          action={openDel}
-          del={del}
-          // action={() => del(todo.id)}
-        />
-      </div>
-    </div>
+    <>
+      {loading ? (
+        <SkeletonLoading />
+      ) : (
+        <div style={todoItem}>
+          <p>{todo.title}</p>
+          <div>
+            <Button
+              text="Edit"
+              variant="success"
+              action={() => open(todo.id, todo.title)}
+            />
+            <Button
+              text="Delete"
+              variant="warning"
+              action={() => delById(todo._id)}
+              // del={del}
+              // action={() => del(todo.id)}
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

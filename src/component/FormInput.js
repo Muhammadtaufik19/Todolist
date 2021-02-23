@@ -1,6 +1,8 @@
 import React from "react";
 import Button from "./Button";
 import "../styles/FormIn.css";
+import axios from "axios";
+const baseUrl = `https://my-udemy-api.herokuapp.com/api/v1/todo`;
 
 class FormInput extends React.Component {
   state = {
@@ -13,10 +15,20 @@ class FormInput extends React.Component {
     });
   };
 
-  submit = (e) => {
+  submit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
     if (this.state.text !== "") {
-      this.props.add(this.state.text);
+      const newTodo = {
+        title: this.state.text,
+      };
+      const res = await axios.post(`${baseUrl}`, newTodo, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(res);
+      this.props.add(res.data.todo);
     }
     this.setState({
       text: "",
